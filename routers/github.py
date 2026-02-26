@@ -19,11 +19,11 @@ async def get_user_status(username:str):
     
 
 
-@router.get("/users-events/{username}")
+@router.get("/user-events/{username}")
 async def get_user_events(username:str):
     events = await user_events(username)
 
-    if not events:
+    if events is None:
         raise HTTPException(status_code=404, detail="There's No Event")
     
-    return events.response.json()
+    return events

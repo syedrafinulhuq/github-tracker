@@ -12,13 +12,13 @@ async def user_status(username:str):
     if response.status_code == 404:
        return None
     
-    return response
+    return response.json()
 
 
 async def user_events(username:str):
-    async with httpx.AsyncClient as client:
+    async with httpx.AsyncClient() as client:
         response = await client.get(f"{GITHUB_API}/users/{username}/events")
         print(f"user_event_client :{client}")
         print(f"user_event_response :{response}")
 
-    return response
+    return response.json()
