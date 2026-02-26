@@ -1,18 +1,6 @@
-from fastapi import FastAPI,HTTPException, status
-import httpx
+from fastapi import FastAPI
+from routers.github import router as github_router
 
 app = FastAPI()
-GITHUB_API = "https://api.github.com"
 
-
-@app.get("/")
-def main():
-    return {"message": "Github User Events Tracker"}
-
-
-
-
-
-
-
-    
+app.include_router(github_router)
