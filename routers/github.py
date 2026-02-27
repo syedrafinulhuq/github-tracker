@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from services.github_services import user_events, user_status
+from services.github_services import user_events, user_status,user_repos
 import httpx
 
 router = APIRouter(prefix="/github", tags=["GitHub"])
@@ -27,3 +27,13 @@ async def get_user_events(username:str):
         raise HTTPException(status_code=404, detail="There's No Event")
     
     return events
+
+
+
+@router.get("/user-repos/{username}")
+async def get_user_repos(username: str):
+    repos = await user_repos(username)
+
+    if repos is None:
+         raise HTTPException(status_code =404, detail ="There's No Repos")
+    return repos
