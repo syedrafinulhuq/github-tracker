@@ -1,5 +1,4 @@
 import httpx
-from github import get_user_events
 
 GITHUB_API = "https://api.github.com"
 
@@ -38,8 +37,9 @@ def format_events(events: list):
     formatted_res = []
     
     for event in events:
-        event_type = event["type"]
-        repo_name = event["repo"]["name"]
+        event_type = event.get("type")
+        repo_name = event.get("repo",{}).get("name","unidentified repo")
+        payload = event.get("payload",{})
         
     # Output Format: 
     # - Pushed 3 commits to kamranahmedse/developer-roadmap
@@ -47,10 +47,21 @@ def format_events(events: list):
     # - Starred kamranahmedse/developer-roadmap
     # - ...
         if event_type == "PushEvent":
-            commit_count = len(event["payload"]["commits"])
+            commits = payload.get("commits",[])
+            commit_count = len(commits)
             formatted_res.append(
                 f"Pushed {commit_count} commits to {repo_name}"
             )
-            
+        elif event_type == "IssuesEvent":
+            action = event["payload"]["action"]
+            formatted_res.append(
+                f"Opened a new issue in {action}"
+            )
 
+        elif event_type == "WatchEvent":
+            starred = event["repo"]["name"]
+            formatted_res.append(
+                f"Starred {starred}"
+            )
 
+    return formatted_res

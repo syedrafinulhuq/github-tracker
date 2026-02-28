@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from services.github_services import user_events, user_status,user_repos
+from services.github_services import format_events,user_events, user_status,user_repos
 import httpx
 
 router = APIRouter(prefix="/github", tags=["GitHub"])
@@ -26,7 +26,9 @@ async def get_user_events(username:str):
     if events is None:
         raise HTTPException(status_code=404, detail="There's No Event")
     
-    return events
+    formatted = format_events(events)
+
+    return formatted
 
 
 
